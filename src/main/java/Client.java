@@ -46,9 +46,22 @@ public class Client {
                 BufferedReader br = new BufferedReader(new InputStreamReader(server.getInputStream()));
                 System.out.println("[서버 응답]:");
                 String line;
-                while ((line = br.readLine()) != null && !line.isEmpty()) {
-                    System.out.println(line);
+                boolean isBody = false;
+                StringBuilder body = new StringBuilder();
+                while ((line = br.readLine()) != null) {
+                    // 헤더 출력
+                    if (!isBody) {
+                        System.out.println(line);
+                        // 빈 줄을 만나면 헤더 끝 -> 바디 시작
+                        if (line.isEmpty()) {
+                            isBody = true;
+                        }
+                    } else {
+                        // 바디 출력
+                        body.append(line);
+                    }
                 }
+                System.out.println(body);
                 System.out.println("-----------------------");
 
             } catch (IOException e) {
